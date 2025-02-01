@@ -1,0 +1,70 @@
+server:
+  port: 8080
+
+spring:
+  profiles:
+    active: dev
+  main:
+    allow-circular-references: true
+  datasource:
+    druid:
+      driver-class-name: ${qf.datasource.driver-class-name}
+      url: jdbc:mysql://${qf.datasource.host}:${qf.datasource.port}/${qf.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+      username: ${qf.datasource.username}
+      password: ${qf.datasource.password}
+  redis:
+    host: ${qf.redis.host}
+    port: ${qf.redis.port}
+    password: ${qf.redis.password}
+    database: ${qf.redis.database}
+
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml  # 如果需要自定义 Mapper XML
+  type-aliases-package: com.qianfeng.entity
+  configuration:
+    map-underscore-to-camel-case: true  # 驼峰命名
+    default-enum-type-handler: com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler
+  global-config:
+    db-config:
+      update-strategy: not_null
+      id-type: auto
+
+
+logging:
+  level:
+    com:
+      qianfeng:
+        mapper: debug
+        service: info
+        controller: info
+
+sky:
+  jwt:
+    # 设置jwt签名加密时使用的秘钥
+    admin-secret-key: itcast
+    # 设置jwt过期时间
+    admin-ttl: 7200000
+    # 设置前端传递过来的令牌名称
+    admin-token-name: token
+    user-secret-key: itheima
+    user-ttl: 7200000
+    user-token-name: authentication
+  alioss:
+    endpoint: ${qf.alioss.endpoint}
+    access-key-id: ${qf.alioss.access-key-id}
+    access-key-secret: ${qf.alioss.access-key-secret}
+    bucket-name: ${qf.alioss.bucket-name}
+  wechat:
+    appid: ${qf.wechat.appid}
+    secret: ${qf.wechat.secret}
+    mchid : ${qf.wechat.mchid}
+    mchSerialNo: ${qf.wechat.mchSerialNo}
+    privateKeyFilePath: ${qf.wechat.privateKeyFilePath}
+    apiV3Key: ${qf.wechat.apiV3Key}
+    weChatPayCertFilePath: ${qf.wechat.weChatPayCertFilePath}
+    notifyUrl: ${qf.wechat.notifyUrl}
+    refundNotifyUrl: ${qf.wechat.refundNotifyUrl}
+  shop:
+    address: 北京市海淀区上地十街10号
+  baidu:
+    ak: your-ak
