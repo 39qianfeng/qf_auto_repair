@@ -1,9 +1,6 @@
 package com.qianfeng.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -21,7 +18,7 @@ public class RepairOrder {
     @TableField("customer_id")
     private Integer customerId;
 
-    @TableField("order_date")
+    @TableField(value = "order_date",fill = FieldFill.INSERT)
     private LocalDateTime orderDate;
 
     @TableField("status")

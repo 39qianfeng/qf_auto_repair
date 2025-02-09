@@ -1,10 +1,13 @@
 package com.qianfeng.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.qianfeng.dto.VehicleDTO;
+import com.qianfeng.dto.VehicleQueryDTO;
 import com.qianfeng.result.Result;
 import com.qianfeng.service.VehicleService;
 import com.qianfeng.vo.VehicleVO;
 import io.swagger.annotations.Api;
+import jnr.ffi.annotations.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,10 +44,22 @@ public class VehicleController {
         VehicleVO vehicle = vehicleService.updateVehicle(id, vehicleDTO);
         return Result.success(vehicle);
     }
-
+    // 删除
     @DeleteMapping("/{id}")
     public Result<Void> deleteVehicle(@PathVariable Integer id) {
         vehicleService.deleteVehicle(id);
         return Result.success();
+    }
+    // 批量删除
+    @DeleteMapping("/deleteByIds")
+    public Result<Void> deleteVehicleByIds(@RequestParam List<Integer> ids){
+        vehicleService.deleteVehicleByIds(ids);
+        return Result.success();
+    }
+    @GetMapping("/page")
+    public Result<IPage<VehicleVO>> page(VehicleQueryDTO vehicleQueryDTO) {
+        System.out.println(vehicleQueryDTO);
+        IPage<VehicleVO> page = vehicleService.pageQuery(vehicleQueryDTO);
+        return Result.success(page);
     }
 }

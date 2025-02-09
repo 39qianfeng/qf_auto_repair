@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qianfeng.mapper.VehicleMapper">
+
+    <!-- 联合查询车辆和客户信息 -->
+    <select id="selectPageWithCustomerType" resultType="com.qianfeng.entity.Vehicle">
+        SELECT v.*, c.customer_type AS customerType
+        FROM vehicles v
+        LEFT JOIN customers c ON v.customer_id = c.customer_id
+        <where>
+            <if test="vehicleId != null">
+                v.vehicle_id = #{vehicleId}
+            </if>
+            <if test="customerId != null">
+                AND v.customer_id = #{customerId}
+            </if>
+            <if test="customerType != null">
+                AND c.customer_type = #{customerType}
+            </if>
+            <if test="searchKey != null">
+                AND (v.license_plate LIKE CONCAT('%', #{searchKey}, '%')
+                OR v.vin LIKE CONCAT('%', #{searchKey}, '%')
+                OR c.name LIKE CONCAT('%', #{searchKey}, '%'))
+            </if>
+        </where>
+    </select>
+</mapper>

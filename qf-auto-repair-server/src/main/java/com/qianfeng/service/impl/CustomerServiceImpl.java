@@ -71,7 +71,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public IPage<CustomerVO> pageQuery(CustomerQueryDTO customerQueryDTO) {
-        //使用mp进行分页查询
+        //使用mp进行分页查询n
         // 创建分页对象
         int current = customerQueryDTO.getCurrent();
         int size = customerQueryDTO.getSize();
