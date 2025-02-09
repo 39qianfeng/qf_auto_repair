@@ -26,7 +26,8 @@
                     <span>客户管理</span>
                   </el-menu-item>
                 </router-link>
-                <router-link to="/dataTable" class="menu-link">
+                <router-link to="/vehicleView" class="menu-link">
+                <!-- <router-link to="/vehecleView" class="menu-link"> -->
                   <el-menu-item index="3">
                     <el-icon><icon-menu /></el-icon>
                     <span>车辆信息管理</span>

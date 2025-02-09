@@ -32,6 +32,11 @@ const routes: Array<RouteRecordRaw> = [
     name: "客户管理",
     component: () => import("../views/tlias/CustomerView.vue"),
   },
+  {
+    path: "/vehicleView",
+    name: "车俩信息管理",
+    component: () => import("../views/tlias/VehicleView.vue"),
+  },
 ];
 
 const router = createRouter({
