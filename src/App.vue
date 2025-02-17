@@ -1,113 +1,19 @@
 <template>
-  <div class="common-layout">
-    <el-container>
-      <el-header style="text-align: center">千风汽修</el-header>
-      <el-container>
-        <el-aside style="width: 280px; height: auto">
-          <el-row class="tac">
-            <el-col :span="18">
-              <h5 class="mb-2">选项</h5>
-              <el-menu
-                default-active="1"
-                class="el-menu-vertical-demo"
-                @open="handleOpen"
-                @close="handleClose"
-              >
-                <router-link to="/" class="menu-link">
-                  <el-menu-item index="1">
-                    <el-icon><icon-menu /></el-icon>
-                    <span>数据分析与报告</span>
-                  </el-menu-item>
-                </router-link>
-                <!-- <router-link to="/dataTable" class="menu-link"> -->
-                <router-link to="/customerView" class="menu-link">
-                  <el-menu-item index="2">
-                    <el-icon><icon-menu /></el-icon>
-                    <span>客户管理</span>
-                  </el-menu-item>
-                </router-link>
-                <router-link to="/vehicleView" class="menu-link">
-                <!-- <router-link to="/vehecleView" class="menu-link"> -->
-                  <el-menu-item index="3">
-                    <el-icon><icon-menu /></el-icon>
-                    <span>车辆信息管理</span>
-                  </el-menu-item>
-                </router-link>
-                <el-menu-item index="4">
-                  <el-icon><icon-menu /></el-icon>
-                  <span>维修服务管理</span>
-                </el-menu-item>
-                <el-menu-item index="5">
-                  <el-icon><icon-menu /></el-icon>
-                  <span>配件管理</span>
-                </el-menu-item>
-                <el-menu-item index="6">
-                  <el-icon><icon-menu /></el-icon>
-                  <span>预约与调度</span>
-                </el-menu-item>
-                <el-menu-item index="7">
-                  <el-icon><icon-menu /></el-icon>
-                  <span>财务管理</span>
-                </el-menu-item>
-                <el-menu-item index="8">
-                  <el-icon><icon-menu /></el-icon>
-                  <span>员工管理</span>
-                </el-menu-item>
-                <el-sub-menu index="9">
-                  <template #title>
-                    <el-icon><location /></el-icon>
-                    <span>Navigator One</span>
-                  </template>
-                  <el-menu-item-group title="Group One">
-                    <el-menu-item index="1-1">item one</el-menu-item>
-                    <el-menu-item index="1-2">item two</el-menu-item>
-                  </el-menu-item-group>
-                  <el-menu-item-group title="Group Two">
-                    <el-menu-item index="1-3">item three</el-menu-item>
-                  </el-menu-item-group>
-                  <el-sub-menu index="1-4">
-                    <template #title>item four</template>
-                    <el-menu-item index="1-4-1">item one</el-menu-item>
-                  </el-sub-menu>
-                </el-sub-menu>
-                <el-menu-item index="4" disabled>
-                  <el-icon><document /></el-icon>
-                  <span>Navigator Three</span>
-                </el-menu-item>
-                <el-menu-item index="5">
-                  <el-icon><setting /></el-icon>
-                  <span>Navigator Four</span>
-                </el-menu-item>
-              </el-menu>
-            </el-col>
-          </el-row>
-        </el-aside>
-        <el-main>
-          <!-- Main -->
-          <router-view />
-        </el-main>
-      </el-container>
-    </el-container>
-  </div>
+  <router-view />
 </template>
 
-<script lang="ts" setup>
-import {
-  Document,
-  Menu as IconMenu,
-  Location,
-  Setting,
-} from "@element-plus/icons-vue";
-const handleOpen = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath);
-};
-const handleClose = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath);
-};
-</script>
+<script setup>
+import { useStore } from 'vuex';
 
-<style scoped>
-.menu-link {
-  text-decoration: none; /* 去掉下划线 */
+const store = useStore();
+
+// 恢复 Vuex 状态
+if (localStorage.getItem("store")) {
+  store.replaceState(Object.assign({}, store.state, JSON.parse(localStorage.getItem("store"))));
 }
-</style>
+
+// 在页面卸载时存储 Vuex 状态
+window.addEventListener("beforeunload", () => {
+  localStorage.setItem("store", JSON.stringify(store.state));
+});
+</script>

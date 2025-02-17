@@ -17,7 +17,7 @@
     </el-select>
     <el-button type="primary" :icon="Search" @click="loadData">查询</el-button>
 
-    <div class="button-group">
+    <div class="button-group" style="padding-top: 20px;padding-bottom: 20px;">
       <el-button type="primary" @click="handleAddDialog">新增车辆</el-button>
       <el-button type="warning" @click="handleEditDialog">修改信息</el-button>
       <el-button type="danger" @click="handleBatchDelete">批量删除</el-button>
