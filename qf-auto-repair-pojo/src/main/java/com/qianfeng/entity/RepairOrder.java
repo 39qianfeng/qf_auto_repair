@@ -31,5 +31,5 @@ public class RepairOrder {
     private BigDecimal actualCost;
 
     @TableField("technician_id")
-    private Integer technicianId;
+    private Integer technicianId; // 对应着employee表中的employeeId
 }

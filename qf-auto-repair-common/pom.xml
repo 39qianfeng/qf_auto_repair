@@ -48,5 +48,12 @@
             <artifactId>jjwt</artifactId>
             <version>${jjwt}</version>
         </dependency>
+
+        <!-- 配置注解处理器依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <version>${cfg-ps}</version>
+        </dependency>
     </dependencies>
 </project>

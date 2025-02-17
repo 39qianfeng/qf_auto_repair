@@ -1,0 +1,119 @@
+{
+  "groups": [
+    {
+      "name": "qf.alioss",
+      "type": "com.qianfeng.properties.AliOssProperties",
+      "sourceType": "com.qianfeng.properties.AliOssProperties"
+    },
+    {
+      "name": "qf.jwt",
+      "type": "com.qianfeng.properties.JwtProperties",
+      "sourceType": "com.qianfeng.properties.JwtProperties"
+    },
+    {
+      "name": "qf.wechat",
+      "type": "com.qianfeng.properties.WeChatProperties",
+      "sourceType": "com.qianfeng.properties.WeChatProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "qf.alioss.access-key-id",
+      "type": "java.lang.String",
+      "sourceType": "com.qianfeng.properties.AliOssProperties"
+    },
+    {
+      "name": "qf.alioss.access-key-secret",
+      "type": "java.lang.String",
+      "sourceType": "com.qianfeng.properties.AliOssProperties"
+    },
+    {
+      "name": "qf.alioss.bucket-name",
+      "type": "java.lang.String",
+      "sourceType": "com.qianfeng.properties.AliOssProperties"
+    },
+    {
+      "name": "qf.alioss.endpoint",
+      "type": "java.lang.String",
+      "sourceType": "com.qianfeng.properties.AliOssProperties"
+    },
+    {
+      "name": "qf.jwt.admin-secret-key",
+      "type": "java.lang.String",
+      "description": "管理端员工生成jwt令牌相关配置",
+      "sourceType": "com.qianfeng.properties.JwtProperties"
+    },
+    {
+      "name": "qf.jwt.admin-token-name",
+      "type": "java.lang.String",
+      "sourceType": "com.qianfeng.properties.JwtProperties"
+    },
+    {
+      "name": "qf.jwt.admin-ttl",
+      "type": "java.lang.Long",
+      "sourceType": "com.qianfeng.properties.JwtProperties"
+    },
+    {
+      "name": "qf.jwt.user-secret-key",
+      "type": "java.lang.String",
+      "description": "用户端微信用户生成jwt令牌相关配置",
+      "sourceType": "com.qianfeng.properties.JwtProperties"
+    },
+    {
+      "name": "qf.jwt.user-token-name",
+      "type": "java.lang.String",
+      "sourceType": "com.qianfeng.properties.JwtProperties"
+    },
+    {
+      "name": "qf.jwt.user-ttl",
+      "type": "java.lang.Long",
+      "sourceType": "com.qianfeng.properties.JwtProperties"
+    },
+    {
+      "name": "qf.wechat.api-v3-key",
+      "type": "java.lang.String",
+      "sourceType": "com.qianfeng.properties.WeChatProperties"
+    },
+    {
+      "name": "qf.wechat.appid",
+      "type": "java.lang.String",
+      "sourceType": "com.qianfeng.properties.WeChatProperties"
+    },
+    {
+      "name": "qf.wechat.mch-serial-no",
+      "type": "java.lang.String",
+      "sourceType": "com.qianfeng.properties.WeChatProperties"
+    },
+    {
+      "name": "qf.wechat.mchid",
+      "type": "java.lang.String",
+      "sourceType": "com.qianfeng.properties.WeChatProperties"
+    },
+    {
+      "name": "qf.wechat.notify-url",
+      "type": "java.lang.String",
+      "sourceType": "com.qianfeng.properties.WeChatProperties"
+    },
+    {
+      "name": "qf.wechat.private-key-file-path",
+      "type": "java.lang.String",
+      "sourceType": "com.qianfeng.properties.WeChatProperties"
+    },
+    {
+      "name": "qf.wechat.refund-notify-url",
+      "type": "java.lang.String",
+      "sourceType": "com.qianfeng.properties.WeChatProperties"
+    },
+    {
+      "name": "qf.wechat.secret",
+      "type": "java.lang.String",
+      "sourceType": "com.qianfeng.properties.WeChatProperties"
+    },
+    {
+      "name": "qf.wechat.we-chat-pay-cert-file-path",
+      "type": "java.lang.String",
+      "sourceType": "com.qianfeng.properties.WeChatProperties"
+    }
+  ],
+  "hints": []
+}

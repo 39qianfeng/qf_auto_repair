@@ -32,4 +32,10 @@ public class Employee {
     // 更新时间
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
+    @TableField("username")
+    private String username;
+    @TableField("password")
+    private String password;
+    @TableField("status")
+    private Integer status;
 }

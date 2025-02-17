@@ -1,6 +1,8 @@
 package com.qianfeng.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.qianfeng.dto.RepairOrderDTO;
+import com.qianfeng.dto.RepairOrderQueryDTO;
 import com.qianfeng.result.Result;
 import com.qianfeng.service.RepairOrderService;
 import com.qianfeng.vo.RepairOrderVO;
@@ -46,5 +48,13 @@ public class RepairOrderController {
     public Result<Void> deleteRepairOrder(@PathVariable Integer id) {
         repairOrderService.deleteRepairOrder(id);
         return Result.success();
+    }
+    /**
+     * 批量查询
+     */
+    @GetMapping("/page")
+    public Result<IPage<RepairOrderVO>> page(@RequestBody RepairOrderQueryDTO repairOrderQueryDTO){
+        IPage<RepairOrderVO> iPage = repairOrderService.pageQuery(repairOrderQueryDTO);
+        return Result.success(iPage);
     }
 }

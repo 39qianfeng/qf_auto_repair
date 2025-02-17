@@ -31,6 +31,7 @@
         <jjwt>0.9.1</jjwt>
         <jaxb-api>2.3.1</jaxb-api>
         <poi>3.16</poi>
+        <cfg-ps>3.4.0</cfg-ps>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -111,6 +112,12 @@
                 <groupId>javax.xml.bind</groupId>
                 <artifactId>jaxb-api</artifactId>
                 <version>${jaxb-api}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-configuration-processor</artifactId>
+                <version>${cfg-ps}</version> <!-- 版本由父 POM 动态管理 -->
             </dependency>
 
             <!-- poi 用于处理 Microsoft Office 格式文档的 Java 库，支持 Excel、Word 和 PowerPoint 等文件格式 -->
