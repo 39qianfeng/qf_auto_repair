@@ -39,6 +39,9 @@
     "webpack-cli": "^5.1.4"
   },
   "eslintConfig": {
+    "globals": {
+      "defineExpose": "readonly"
+    },
     "root": true,
     "env": {
       "node": true

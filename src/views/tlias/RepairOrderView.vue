@@ -27,13 +27,7 @@
       end-placeholder="结束日期"
       value-format="YYYY-MM-DD"
     />
-    <el-button type="primary" :icon="Search" @click="loadData">查询</el-button>
-
-    <div class="button-group" style="padding-top: 20px;padding-bottom: 20px;">
-      <el-button type="primary" @click="showCreateDialog">新建订单</el-button>
-      <el-button type="warning" @click="showEditDialog">修改状态</el-button>
-      <el-button type="danger" @click="handleBatchDelete">批量删除</el-button>
-    </div>
+    <el-button type="primary" :icon="Search" @click="loadData" style="margin-left: 3%;">查询</el-button>
   </div>
 
   <!-- 订单表格 -->
@@ -44,48 +38,67 @@
     @selection-change="handleSelectionChange"
   >
     <el-table-column type="selection" width="55" />
-    <el-table-column prop="orderNumber" label="订单号" width="180" fixed>
-      <template #default="{row}">
-        <el-tag type="info">{{ row.orderNumber }}</el-tag>
+    <el-table-column prop="orderNumber" label="订单号" width="100" fixed>
+      <template #default="{ row }">
+        <el-tag type="info">{{ row.orderId }}</el-tag>
       </template>
     </el-table-column>
-    <el-table-column label="客户信息" width="200">
-      <template #default="{row}">
+    <el-table-column label="客户信息" width="150">
+      <template #default="{ row }">
         <div class="customer-info">
           <div>{{ row.customerName }}</div>
-          <div class="contact-info">{{ row.customerPhone }}</div>
+          <div class="contact-info">{{ row.phone }}</div>
         </div>
       </template>
     </el-table-column>
-    <el-table-column label="车辆信息" min-width="220">
-      <template #default="{row}">
+    <el-table-column label="车牌号" min-width="100">
+      <template #default="{ row }">
         <div class="vehicle-info">
-          <div>{{ row.licensePlate }}</div>
-          <div class="detail-info">
+          <div>{{ row.vehicleLicensePlate }}</div>
+          <!-- <div class="detail-info">
             {{ row.brand }} {{ row.model }} {{ row.color }}
-          </div>
+          </div> -->
         </div>
       </template>
     </el-table-column>
-    <el-table-column prop="totalAmount" label="金额" width="120" align="right">
-      <template #default="{row}">¥ {{ row.totalAmount?.toFixed(2) }}</template>
+    <el-table-column prop="totalAmount" label="金额" width="100" align="right">
+      <template #default="{ row }">¥ {{ row.orderCost?.toFixed(2) }}</template>
     </el-table-column>
     <el-table-column prop="status" label="状态" width="120">
-      <template #default="{row}">
-        <el-tag :type="statusTagMap[row.status]">
-          {{ statusLabels[row.status] }}
+      <template #default="{ row }">
+        <el-tag :type="getStatusTag(row.status)">
+          {{ getStatusLabel(row.status) }}
         </el-tag>
       </template>
     </el-table-column>
-    <el-table-column prop="createTime" label="创建时间" width="180" />
-    <el-table-column label="操作" width="180" fixed="right">
-      <template #default="{row}">
-        <el-button link type="primary" @click="showDetail(row.id)">详情</el-button>
-        <el-button link type="primary" @click="printOrder(row.id)">打印</el-button>
-        <el-button link type="danger" @click="handleDelete(row.id)">删除</el-button>
+    <el-table-column prop="createTime" label="创建时间" width="180">
+      <template #default="{ row }">
+        <div>{{ formatDate(row.orderDate) }}</div>
+      </template>
+    </el-table-column>
+    <el-table-column label="操作" width="220" fixed="right">
+      <template #default="{ row }">
+        <el-button
+          v-if="row.status === '待维修'"
+          link
+          type="warning"
+          @click="handleRepair(row.orderId)"
+        >
+          开始维修
+        </el-button>
+        <el-button
+          v-if="row.status === '维修中'"
+          link
+          type="success"
+          @click="handleRepaired(row.orderId)"
+        >
+          维修完成
+        </el-button>
+        <el-button link type="danger" @click="handleCancelOrder(row.orderId)">取消</el-button>
       </template>
     </el-table-column>
   </el-table>
+
 
   <!-- 分页 -->
   <el-pagination
@@ -97,236 +110,51 @@
     @size-change="loadData"
     @current-change="loadData"
   />
-
-  <!-- 订单详情对话框 -->
-  <el-dialog
-    v-model="showDetailDialog"
-    title="订单详情"
-    width="800px"
-  >
-    <el-descriptions :column="2" border>
-      <el-descriptions-item label="订单号">{{ currentOrder.orderNumber }}</el-descriptions-item>
-      <el-descriptions-item label="客户姓名">{{ currentOrder.customerName }}</el-descriptions-item>
-      <el-descriptions-item label="联系电话">{{ currentOrder.customerPhone }}</el-descriptions-item>
-      <el-descriptions-item label="车牌号">{{ currentOrder.licensePlate }}</el-descriptions-item>
-      <el-descriptions-item label="车辆品牌">{{ currentOrder.brand }}</el-descriptions-item>
-      <el-descriptions-item label="车辆型号">{{ currentOrder.model }}</el-descriptions-item>
-      <el-descriptions-item label="创建时间">{{ currentOrder.createTime }}</el-descriptions-item>
-      <el-descriptions-item label="完成时间">{{ currentOrder.completeTime || '-' }}</el-descriptions-item>
-      <el-descriptions-item label="总金额">¥ {{ currentOrder.totalAmount?.toFixed(2) }}</el-descriptions-item>
-    </el-descriptions>
-
-    <el-divider content-position="left">维修项目</el-divider>
-    <el-table :data="currentOrder.services" size="small">
-      <el-table-column prop="itemName" label="项目名称" />
-      <el-table-column prop="price" label="单价" align="right" />
-      <el-table-column prop="quantity" label="数量" align="center" />
-      <el-table-column prop="total" label="小计" align="right" />
-    </el-table>
-
-    <el-divider content-position="left">使用配件</el-divider>
-    <el-table :data="currentOrder.parts" size="small">
-      <el-table-column prop="partName" label="配件名称" />
-      <el-table-column prop="price" label="单价" align="right" />
-      <el-table-column prop="quantity" label="数量" align="center" />
-      <el-table-column prop="total" label="小计" align="right" />
-    </el-table>
-  </el-dialog>
-
-  <!-- 创建/编辑对话框 -->
-  <el-dialog
-    v-model="showFormDialog"
-    :title="formTitle"
-    width="800px"
-    destroy-on-close
-  >
-    <el-form
-      ref="orderForm"
-      :model="formData"
-      :rules="formRules"
-      label-width="100px"
-    >
-      <el-row :gutter="20">
-        <el-col :span="12">
-          <el-form-item label="客户选择" prop="customerId">
-            <el-select
-              v-model="formData.customerId"
-              filterable
-              placeholder="搜索客户"
-              @change="loadCustomerVehicles"
-            >
-              <el-option
-                v-for="customer in customerList"
-                :key="customer.customerId"
-                :label="customer.name"
-                :value="customer.customerId"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="车辆选择" prop="vehicleId">
-            <el-select
-              v-model="formData.vehicleId"
-              :disabled="!formData.customerId"
-              placeholder="请先选择客户"
-            >
-              <el-option
-                v-for="vehicle in vehicleList"
-                :key="vehicle.vehicleId"
-                :label="`${vehicle.licensePlate} (${vehicle.brand})`"
-                :value="vehicle.vehicleId"
-              />
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="订单状态" prop="status">
-            <el-select v-model="formData.status">
-              <el-option
-                v-for="status in statusOptions"
-                :key="status.value"
-                :label="status.label"
-                :value="status.value"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="紧急程度" prop="priority">
-            <el-select v-model="formData.priority">
-              <el-option label="普通" value="NORMAL" />
-              <el-option label="加急" value="URGENT" />
-            </el-select>
-          </el-form-item>
-        </el-col>
-      </el-row>
-
-      <el-divider content-position="left">维修项目</el-divider>
-      <service-item-editor v-model="formData.services" />
-
-      <el-divider content-position="left">使用配件</el-divider>
-      <part-usage-editor v-model="formData.parts" />
-
-      <el-divider />
-      <div class="total-amount">
-        预估总金额：¥ {{ totalAmount.toFixed(2) }}
-      </div>
-    </el-form>
-
-    <template #footer>
-      <el-button @click="showFormDialog = false">取消</el-button>
-      <el-button type="primary" @click="submitForm">提交</el-button>
-    </template>
-  </el-dialog>
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, computed, onMounted } from 'vue'
-import axiosInstance from '@/utils/axios'
-import type { FormInstance } from 'element-plus'
-import { Search } from '@element-plus/icons-vue'
+import { ref, reactive, computed, onMounted } from "vue";
+import { ElMessage } from "element-plus";
+import { Search } from "@element-plus/icons-vue";
+import type { RepairOrderVO, Status } from "@/types/repairOrder";
+import { repairOrderApi } from "@/api/repairOrder";
 
-interface RepairOrder {
-  id: number
-  orderNumber: string
-  customerId: number
-  customerName: string
-  customerPhone: string
-  vehicleId: number
-  licensePlate: string
-  brand: string
-  model: string
-  color: string
-  totalAmount: number
-  status: string
-  createTime: string
-  completeTime?: string
-  services: ServiceItem[]
-  parts: PartUsage[]
-}
-
-interface ServiceItem {
-  itemName: string
-  price: number
-  quantity: number
-  total: number
-}
-
-interface PartUsage {
-  partName: string
-  price: number
-  quantity: number
-  total: number
-}
-
-// 状态配置
 const statusOptions = [
-  { value: 'CREATED', label: '已创建' },
-  { value: 'PROCESSING', label: '进行中' },
-  { value: 'COMPLETED', label: '已完成' },
-  { value: 'CANCELLED', label: '已取消' }
-]
+  { value: "待维修" as Status, label: "待维修" },
+  { value: "维修中" as Status, label: "维修中" },
+  { value: "已完成" as Status, label: "已完成" },
+  { value: "已取消" as Status, label: "已取消" }
+];
 
-const statusTagMap = {
-  CREATED: 'info',
-  PROCESSING: 'warning',
-  COMPLETED: 'success',
-  CANCELLED: 'danger'
-}
+const statusTagMap: { [key in Status]: string } = {
+  "待维修": "info",
+  "维修中": "warning",
+  "已完成": "success",
+  "已取消": "danger"
+};
 
-const statusLabels = statusOptions.reduce((acc, cur) => {
-  acc[cur.value] = cur.label
-  return acc
-}, {} as Record<string, string>)
+const statusLabels: { [key in Status]: string } = {
+  "待维修": "待维修",
+  "维修中": "维修中",
+  "已完成": "已完成",
+  "已取消": "已取消"
+};
 
-// 分页配置
 const pagination = reactive({
   current: 1,
   size: 10,
   total: 0
-})
+});
 
-// 窗口名称
-const formTitle = ref('新增订单');
+const orderList = ref<RepairOrderVO[]>([]);
+const selectedIds = ref<number[]>([]);
+const searchKey = ref("");
+const orderStatus = ref<Status>('待维修');
+const dateRange = ref<string[]>([]);
 
-// 数据列表
-const orderList = ref<RepairOrder[]>([])
-const customerList = ref<any[]>([])
-const vehicleList = ref<any[]>([])
-const selectedIds = ref<number[]>([])
-const currentOrder = ref<RepairOrder>({} as RepairOrder)
+const getStatusTag = (status: string) => statusTagMap[status as Status];
+const getStatusLabel = (status: string) => statusLabels[status as Status];
 
-// 表单相关
-const showFormDialog = ref(false)
-const showDetailDialog = ref(false)
-const formMode = ref<'create' | 'edit'>('create')
-const orderForm = ref<FormInstance>()
-const searchKey = ref('')
-const orderStatus = ref('')
-const dateRange = ref<string[]>([])
-
-const formData = reactive({
-  id: null as number | null,
-  customerId: null as number | null,
-  vehicleId: null as number | null,
-  status: 'CREATED',
-  priority: 'NORMAL',
-  services: [] as ServiceItem[],
-  parts: [] as PartUsage[]
-})
-
-// 表单验证规则
-const formRules = {
-  customerId: [{ required: true, message: '请选择客户', trigger: 'change' }],
-  vehicleId: [{ required: true, message: '请选择车辆', trigger: 'change' }],
-  status: [{ required: true, message: '请选择状态', trigger: 'change' }]
-}
-
-// 计算总金额
-const totalAmount = computed(() => {
-  const serviceTotal = formData.services.reduce((sum, item) => sum + item.price * item.quantity, 0)
-  const partTotal = formData.parts.reduce((sum, item) => sum + item.price * item.quantity, 0)
-  return serviceTotal + partTotal
-})
-
-// 加载数据
 const loadData = async () => {
   try {
     const params = {
@@ -336,68 +164,90 @@ const loadData = async () => {
       status: orderStatus.value,
       startDate: dateRange.value?.[0],
       endDate: dateRange.value?.[1]
-    }
-
-    const res = await axiosInstance.get('/api/repair-orders/page', { params })
-    orderList.value = res.data.data.records
-    pagination.total = res.data.data.total
+    };
+    const res = await repairOrderApi.pageQuery(params);
+    orderList.value = res.data.data.records || [];
+    pagination.total = res.data.data.total || 0;
   } catch (error) {
-    console.error('加载数据失败:', error)
+    console.error("加载数据失败:", error);
   }
-}
+};
 
-// 加载客户列表
-const loadCustomers = async () => {
-  const res = await axiosInstance.get('/api/customers')
-  customerList.value = res.data.data
-}
+const handleSelectionChange = (selection: RepairOrderVO[]) => {
+  selectedIds.value = selection.map(order => order.orderId);
+};
 
-// 加载客户车辆
-const loadCustomerVehicles = async () => {
-  if (!formData.customerId) return
-  const res = await axiosInstance.get(`/api/vehicles?customerId=${formData.customerId}`)
-  vehicleList.value = res.data.data
-}
-
-// 显示创建对话框
-const showCreateDialog = () => {
-  formMode.value = 'create'
-  Object.assign(formData, {
-    id: null,
-    customerId: null,
-    vehicleId: null,
-    status: 'CREATED',
-    priority: 'NORMAL',
-    services: [],
-    parts: []
-  })
-  showFormDialog.value = true
-}
-
-// 提交表单
-const submitForm = async () => {
-  if (!orderForm.value) return
-  const valid = await orderForm.value.validate()
-  if (!valid) return
-
+// 将订单状态修改为”维修中“
+const handleRepair = async (orderId: number) => {
+  const status: Status = "维修中"
   try {
-    const api = formMode.value === 'create' 
-      ? axiosInstance.post('/api/repair-orders', formData)
-      : axiosInstance.put(`/api/repair-orders/${formData.id}`, formData)
-
-    await api
-    loadData()
-    showFormDialog.value = false
+    const params = {
+      status: status
+    }
+    await repairOrderApi.update(orderId,params);
+    ElMessage.success("订单状态已更新为“维修中”");
+    loadData();
   } catch (error) {
-    console.error('提交失败:', error)
+    ElMessage.error("更新状态失败");
+    console.error("更新状态失败:", error);
   }
-}
+};
 
-// 初始化加载
+// 将订单状态修改为”已完成“
+const handleRepaired = async (orderId: number) => {
+  const status: Status = "已完成"
+  try {
+    const params = {
+      status: status
+    }
+    await repairOrderApi.update(orderId,params);
+    ElMessage.success("订单已完成");
+    loadData();
+  } catch (error) {
+    ElMessage.error("订单完成失败：" + error);
+    console.error("订单完成失败：", error);
+  }
+};
+
+// 取消订单
+const handleCancelOrder = async (orderId: number) => {
+  const status: Status = "已取消"
+  try {
+    const params = {
+      status: status
+    }
+    const res = await repairOrderApi.update(orderId,params);
+    if (res.data.code !== 1) {
+      ElMessage.error("取消失败：" + res.data.msg);
+    } else {
+      ElMessage.success("订单已成功取消");
+      loadData();
+    }
+  } catch (error) {
+    ElMessage.error("取消失败：" + error);
+    console.error("取消失败：", error);
+  }
+};
+
+// 将日期数组转换为 Date 对象
+const formatDate = (dateArray: number[]) => {
+  if (!dateArray || (dateArray.length !== 5 && dateArray.length !== 6)) {
+    return '无效日期';
+  }
+  let date;
+  if(dateArray.length === 5){
+    const [year, month, day, hours, minutes] = dateArray;
+    date = new Date(year, month, day, hours, minutes);
+  }else{
+    const [year, month, day, hours, minutes,second] = dateArray;
+    date = new Date(year, month, day, hours, minutes,second);
+  }
+  return date.toLocaleString(); // 格式化为本地日期和时间字符串
+};
+
 onMounted(() => {
-  loadData()
-  loadCustomers()
-})
+  loadData();
+});
 </script>
 
 <style scoped>

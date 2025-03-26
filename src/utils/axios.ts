@@ -41,7 +41,8 @@ axiosInstance.interceptors.response.use(
     // 如果是 401 错误且不是登录请求
     if (
       error.response?.status === 401 &&
-      !originalRequest.url.includes("/login")
+      !originalRequest.url.includes("/login") &&
+      !originalRequest.url.includes("/customerlogin")
     ) {
       // 清除本地存储中的 token
       localStorage.removeItem("token");
@@ -51,7 +52,13 @@ axiosInstance.interceptors.response.use(
       ElMessage.error("登录已过期，请重新登录");
 
       // 跳转到登录页面
-      router.push("/login");
+      // 根据当前路径决定跳转到哪个登录页面
+      const currentPath = router.currentRoute.value.path;
+      if (currentPath.startsWith("/customer/")) {
+        router.push("/customerlogin");
+      } else {
+        router.push("/login");
+      }
     }
 
     // 如果不是 401 错误，直接返回错误

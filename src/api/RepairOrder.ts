@@ -12,9 +12,9 @@ export type RepairOrderPage = IPage<RepairOrderVO>;
 export const repairOrderApi = {
   // 分页查询
   pageQuery: (params: RepairOrderQueryDTO) => {
-    return axiosInstance.post<Result<RepairOrderPage>>(
+    return axiosInstance.get<Result<RepairOrderPage>>(
       '/api/repair-orders/page',
-      params
+      {params}
     )
   },
 

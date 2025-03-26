@@ -49,26 +49,38 @@
                 <router-link to="/repairOrderView" class="menu-link">
                   <el-menu-item index="4">
                     <el-icon><icon-menu /></el-icon>
+                    <span>维修订单管理</span>
+                  </el-menu-item>
+                </router-link>
+                <router-link to="/partManagementView" class="menu-link">
+                  <el-menu-item index="5">
+                    <el-icon><icon-menu /></el-icon>
+                    <span>配件管理</span>
+                  </el-menu-item>
+                </router-link>
+                <router-link to="/serviceManagementView" class="menu-link">
+                  <el-menu-item index="6">
+                    <el-icon><icon-menu /></el-icon>
                     <span>维修服务管理</span>
                   </el-menu-item>
                 </router-link>
-                <el-menu-item index="5">
-                  <el-icon><icon-menu /></el-icon>
-                  <span>配件管理</span>
-                </el-menu-item>
-                <el-menu-item index="6">
+                <el-menu-item index="7">
                   <el-icon><icon-menu /></el-icon>
                   <span>预约与调度</span>
                 </el-menu-item>
-                <el-menu-item index="7">
-                  <el-icon><icon-menu /></el-icon>
-                  <span>财务管理</span>
-                </el-menu-item>
-                <el-menu-item index="8">
-                  <el-icon><icon-menu /></el-icon>
-                  <span>员工管理</span>
-                </el-menu-item>
-                <el-sub-menu index="9">
+                <router-link to="/workSpaceView" class="menu-link">
+                  <el-menu-item index="8">
+                    <el-icon><icon-menu /></el-icon>
+                    <span>财务管理</span>
+                  </el-menu-item>
+                </router-link>
+                <router-link to="/employeeManagementView" class="menu-link">
+                  <el-menu-item index="9">
+                    <el-icon><icon-menu /></el-icon>
+                    <span>员工管理</span>
+                  </el-menu-item>
+                </router-link>
+                <el-sub-menu index="10">
                   <template #title>
                     <el-icon><location /></el-icon>
                     <span>Navigator One</span>

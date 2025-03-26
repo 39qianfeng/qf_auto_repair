@@ -1,9 +1,10 @@
+import { Customer, IPage, Result } from "@/types/common";
 import axiosInstance from "@/utils/axios";
 
 
 // 获取客户分页数据
 export const getCustomersPage = async (params: any) => {
-  return axiosInstance.get('/api/customers/page', { params });
+  return axiosInstance.get<Result<IPage<Customer>>>('/api/customers/page', { params });
 };
 
 // 新增客户

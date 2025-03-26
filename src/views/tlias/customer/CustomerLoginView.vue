@@ -3,9 +3,8 @@
     <div class="login-box">
       <el-form ref="loginForm" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="账号" prop="username">
-          <el-input v-model="form.username" placeholder="请输入员工账号" />
+          <el-input v-model="form.username" placeholder="请输入顾客账号" />
         </el-form-item>
-        
         <el-form-item label="密码" prop="password">
           <el-input 
             v-model="form.password" 
@@ -14,7 +13,6 @@
             show-password
           />
         </el-form-item>
-
         <el-form-item>
           <el-button 
             type="primary" 
@@ -29,21 +27,20 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { ElMessage } from 'element-plus';
-import axiosInstance from '@/utils/axios'; // 引入 Axios 实例
-import { EmployeeLoginVO } from '@/types/employee';
+import { customerApi } from "@/api/customer/customer";
+import type { CustomerLoginDTO } from "@/types/customer";
 import { useStore } from 'vuex';
-import { Result } from '@/types/common';
 
 const router = useRouter();
 const route = useRoute();
 const store = useStore();
 
 const loginForm = ref<any>(null); // 表单引用
-const form = ref({
+const form = ref<CustomerLoginDTO>({
   username: '',
   password: ''
 });
@@ -62,33 +59,24 @@ const handleLogin = async () => {
     await loginForm.value.validate(); // 验证表单
 
     // 发起登录请求
-    const response = await axiosInstance.post<Result<EmployeeLoginVO>>('/api/employees/login', {
-      username: form.value.username,
-      password: form.value.password
-    });
+    const response = await customerApi.login(form.value);
 
     // 登录成功
-    const {employeeId, name, token,userName,type } = response.data.data;
-    // console.log(token)
-
+    const { customerId, name, token,userName,type } = response.data.data;
     // 更新 Vuex 状态，存储令牌
     store.dispatch('login', {
-      employeeId,
-      userName,
+      customerId,
       name,
       token,
+      userName,
       type
     });
 
-    // 提示用户登录成功
     ElMessage.success('登录成功');
-
-    // 跳转到主页或上一个页面
-    const redirectUrl = route.query.redirect || '/';
+    const redirectUrl = '/customer/customerShoppingView';
+    // const redirectUrl = route.query.redirect || '/customer/customerShoppingView';
     router.push(redirectUrl as string);
   } catch (error: any) {
-    // 登录失败，提示用户
-    console.error(error);
     ElMessage.error('登录失败，请检查账号密码');
   } finally {
     loading.value = false;

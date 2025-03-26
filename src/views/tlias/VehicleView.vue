@@ -293,8 +293,8 @@ const submitForm = async () => {
   }
 }
 
-// 加载客户信息
-const loadCustomers = getCustomersPage;
+// // 加载客户信息
+// const loadCustomers = getCustomersPage;
 
 // 删除车俩信息
 const handleDelete = (id:number) => {

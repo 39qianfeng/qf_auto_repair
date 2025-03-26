@@ -11,7 +11,6 @@ export default createStore({
     setAuth(state, payload) {
       state.isAuthenticated = payload.isAuthenticated; // 更新登录状态
       state.user = payload.user; // 更新用户信息
-      state.userRole = payload.user ? payload.user.type || "" : ""; // 更新用户角色，避免 null 错误,更新用户类型 "admin" || "customer"
       localStorage.setItem(
         "isAuthenticated",
         JSON.stringify(payload.isAuthenticated)
@@ -22,15 +21,14 @@ export default createStore({
   actions: {
     login({ commit }, user) {
       commit("setAuth", { isAuthenticated: true, user }); // 调用 mutation 更新状态
-      const userstring = JSON.stringify(user);
-      localStorage.setItem("userstring", userstring); // 存储 user
+      localStorage.setItem("user", user); // 存储 user
       localStorage.setItem("token", user.token); // 存储 token
       localStorage.setItem("type", user.type);
     },
     logout({ commit }) {
       commit("setAuth", { isAuthenticated: false, user: null }); // 调用 mutation 更新状态
       localStorage.removeItem("isAuthenticated");
-      localStorage.removeItem("userstring");
+      localStorage.removeItem("user");
       localStorage.removeItem("token");
       localStorage.removeItem("type");
     },

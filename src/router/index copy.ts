@@ -2,7 +2,6 @@ import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 import HomeView from '../views/tlias/HomeView.vue'
 import MainLayOut from '@/layout/MainLayOut.vue';
 import store from '@/store';
-import CustomerLayOut from '@/layout/CustomerLayOut.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -11,19 +10,14 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import("../views/tlias/LoginView.vue"),
   },
   {
-    path: "/customerlogin",
-    name: "CustomerLogin",
-    component: () => import("../views/tlias/customer/CustomerLoginView.vue"),
-  },
-  {
     path: "/",
     name: "App",
     component: MainLayOut,
     children: [
       {
         path: "",
-        name: "工作台",
-        component: () => import("../views/tlias/workSpace.vue"),
+        name: "Home",
+        component: () => import("../views/tlias/HomeView.vue"),
       },
       {
         path: "about",
@@ -65,30 +59,6 @@ const routes: Array<RouteRecordRaw> = [
         name: "收费服务管理",
         component: () => import("../views/tlias/ServiceManagementView.vue"),
       },
-      {
-        path: "employeeManagementView",
-        name: "员工管理",
-        component: () => import("../views/tlias/EmployeeView.vue"),
-      },
-      {
-        path: "workSpaceView",
-        name: "工作台2",
-        component: () => import("../views/tlias/workSpace.vue"),
-      },
-    ],
-    meta: { requireAuth: true }, // 需要认证
-  },
-  {
-    path: "/customer/",
-    name: "CustomerApp",
-    component: CustomerLayOut,
-    children: [
-      {
-        path: "customerShoppingView",
-        name: "顾客购物页面",
-        component: () =>
-          import("../views/tlias/customer/CustomerShoppingView.vue"),
-      },
     ],
     meta: { requireAuth: true }, // 需要认证
   },
@@ -100,17 +70,10 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const isCustomerRoute = to.path.startsWith("/customer/");
-
   if (to.meta.requireAuth && !store.state.isAuthenticated) {
-    // 如果用户未登录，根据访问的路径跳转到相应的登录页面
-    if (isCustomerRoute) {
-      next({name: "CustomerLogin"});
-    } else {
-      next({name: "Login"});
-    }
+    next({ name: "Login" }); // 如果需要认证但未登录，跳转到登录页面
   } else {
-    next();
+    next(); // 允许访问
   }
 });
 
