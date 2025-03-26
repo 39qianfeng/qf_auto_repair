@@ -6,6 +6,7 @@ import com.qianfeng.properties.JwtProperties;
 import com.qianfeng.utils.BaseContext;
 import com.qianfeng.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -51,7 +52,7 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
             log.info("jwt校验:{}", token);
             Claims claims = JwtUtil.parseJWT(jwtProperties.getAdminSecretKey(), token);
             //解析Jwt令牌获取操作者的id
-            Long empId = Long.valueOf(claims.get(JwtClaimsConstant.EMP_ID).toString());
+            Integer empId = Integer.valueOf(claims.get(JwtClaimsConstant.EMP_ID).toString());
             log.info("当前员工id：", empId);
             BaseContext.setCurrentId(empId);
             //3、通过，放行

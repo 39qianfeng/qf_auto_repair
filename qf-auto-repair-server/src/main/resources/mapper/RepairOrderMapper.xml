@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qianfeng.mapper.RepairOrderMapper">
+
+    <select id="selectPageBySearchKey" resultType="com.qianfeng.entity.RepairOrder">
+        SELECT r.*
+        FROM repair_orders r
+        LEFT JOIN vehicles v ON r.vehicle_id = v.vehicle_id
+        LEFT JOIN customers c ON r.customer_id = c.customer_id
+        <where>
+            <if test="orderId != null">
+                r.order_id = #{orderId}
+            </if>
+            <if test="startDate != null">
+                AND r.order_date &gt; #{startDate}
+            </if>
+            <if test="endDate != null">
+                AND r.order_date &lt; #{endDate}
+            </if>
+            <if test="searchKey != null">
+                AND (v.license_plate LIKE CONCAT('%', #{searchKey}, '%')
+                OR r.order_id LIKE CONCAT('%', #{searchKey}, '%')
+                OR c.name LIKE CONCAT('%', #{searchKey}, '%'))
+            </if>
+        </where>
+    </select>
+    <select id="getTotalAmount" resultType="java.math.BigDecimal">
+        select sum(r.order_cost)
+        from repair_orders r
+        <where>
+            <if test="begin != null">
+                and order_date &gt; #{begin}
+            </if>
+            <if test="end != null">
+                and order_date &lt; #{end}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+        </where>
+    </select>
+</mapper>

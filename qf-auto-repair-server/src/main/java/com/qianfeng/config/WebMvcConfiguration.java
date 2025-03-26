@@ -4,6 +4,7 @@ package com.qianfeng.config;
 //import com.sky.interceptor.JwtTokenUserInterceptor;
 //import com.sky.json.JacksonObjectMapper;
 import com.qianfeng.Interceptor.JwtTokenAdminInterceptor;
+import com.qianfeng.Interceptor.JwtTokenCustomerInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -31,6 +32,8 @@ import java.util.List;
 public class WebMvcConfiguration extends WebMvcConfigurationSupport {
     @Autowired
     JwtTokenAdminInterceptor jwtTokenAdminInterceptor;
+    @Autowired
+    JwtTokenCustomerInterceptor jwtTokenCustomerInterceptor;
     @Override
     //拦截器
     public void addInterceptors(InterceptorRegistry registry) {
@@ -38,8 +41,12 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
         //addPathPatterns拦截路径
         //excludePathPatterns不拦截路径
         registry.addInterceptor(jwtTokenAdminInterceptor)
-                .addPathPatterns("/**")// 拦截所有/api/下的请求
+                .addPathPatterns("/api/**")// 拦截所有/api/下的请求
                 .excludePathPatterns("/api/employees/login"); // 排除登录请求
+
+        registry.addInterceptor(jwtTokenCustomerInterceptor)
+                .addPathPatterns("/customer/**")// 拦截所有/customer/下的请求
+                .excludePathPatterns("/customer/customers/login");// 排除用户登录请求
     }
 
 
@@ -47,7 +54,7 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:7070") // 替换为你的前端应用的地址
+                .allowedOriginPatterns("http://localhost:7070", "http://192.168.31.145:7070")
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowedHeaders("*")
                 .allowCredentials(true);

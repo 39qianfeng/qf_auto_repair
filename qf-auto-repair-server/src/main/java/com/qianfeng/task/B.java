@@ -14,18 +14,18 @@ import java.io.InputStream;
  */
 @Component
 public class B {
-    @Scheduled(cron = "0 0 * * * ? ") //每小时触发一次
-    public void getTop100(){
-//        System.setProperty("python.import.site", "false");
-//        PythonInterpreter interpreter = new PythonInterpreter();
-//        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("");
-//        System.out.println(resourcesPath);
-//        interpreter.execfile("src/main/resources/pythonCode/main.py");
-        Runtime runtime = Runtime.getRuntime();
-        try {
-            Process process = runtime.exec("src/main/resources/pythonCode/main.py");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    @Scheduled(cron = "0 0 * * * ? ") //每小时触发一次
+//    public void getTop100(){
+////        System.setProperty("python.import.site", "false");
+////        PythonInterpreter interpreter = new PythonInterpreter();
+////        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("");
+////        System.out.println(resourcesPath);
+////        interpreter.execfile("src/main/resources/pythonCode/main.py");
+//        Runtime runtime = Runtime.getRuntime();
+//        try {
+//            Process process = runtime.exec("src/main/resources/pythonCode/main.py");
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 }

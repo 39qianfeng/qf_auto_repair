@@ -9,6 +9,10 @@ import java.time.LocalDateTime;
 @TableName("repair_orders")
 @Data
 public class RepairOrder {
+    public static final String TO_BE_REPAIR = "待维修";
+    public static final String UNDER_REPAIR = "维修中";
+    public static final String COMPLETED = "已完成";
+    public static final String CANCELLED = "已取消";
     @TableId(type = IdType.AUTO)
     private Integer orderId;
 
@@ -24,11 +28,9 @@ public class RepairOrder {
     @TableField("status")
     private String status;
 
-    @TableField("estimated_cost")
-    private BigDecimal estimatedCost;
-
-    @TableField("actual_cost")
-    private BigDecimal actualCost;
+    //orderCost 属性
+    @TableField("order_cost")
+    private BigDecimal orderCost;
 
     @TableField("technician_id")
     private Integer technicianId; // 对应着employee表中的employeeId

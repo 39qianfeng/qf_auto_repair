@@ -12,7 +12,6 @@ public class RepairOrderDTO {
     private Integer customerId;
     private LocalDateTime orderDate;
     private String status;
-    private BigDecimal estimatedCost;
-    private BigDecimal actualCost;
+    private BigDecimal orderCost;
     private Integer technicianId;
 }

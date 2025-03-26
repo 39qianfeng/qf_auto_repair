@@ -3,9 +3,11 @@ package com.qianfeng.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.qianfeng.dto.CustomerDTO;
+import com.qianfeng.dto.CustomerLoginDTO;
 import com.qianfeng.dto.CustomerQueryDTO;
-import com.qianfeng.result.PageResult;
+import com.qianfeng.vo.CustomerLoginVO;
 import com.qianfeng.vo.CustomerVO;
+
 import java.util.List;
 
 public interface CustomerService {
@@ -16,4 +18,6 @@ public interface CustomerService {
     void deleteCustomer(Integer id);
 
     IPage<CustomerVO> pageQuery(CustomerQueryDTO customerQueryDTO);
+
+    CustomerLoginVO login(CustomerLoginDTO customerLoginDTO);
 }

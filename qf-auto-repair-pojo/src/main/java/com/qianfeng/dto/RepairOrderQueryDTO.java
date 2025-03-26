@@ -15,10 +15,10 @@ public class RepairOrderQueryDTO {
     private Integer orderId;
     private Integer vehicleId;
     private Integer customerId;
-    private LocalDateTime orderDate;
+    private String searchKey;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
     private String status;
-    private BigDecimal estimatedCost;
-    private BigDecimal actualCost;
     private Integer technicianId;
     // 分页参数
     private Integer current; // 当前页码

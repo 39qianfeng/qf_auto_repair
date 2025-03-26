@@ -87,6 +87,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     public EmployeeVO createEmployee(EmployeeDTO employeeDTO) {
         Employee employee = new Employee();
         BeanUtils.copyProperties(employeeDTO, employee);
+        if(employee.getUsername() == null){
+            employee.setUsername(employee.getPhone());
+        }
+        if(employee.getPassword() == null){
+            employee.setPassword("123456");
+        }
         employeeMapper.insert(employee);
         return convertToVO(employee);
     }

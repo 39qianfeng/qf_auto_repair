@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Data
 @Api(tags = "车俩信息相关接口")
 public class Vehicle {
+    public static final Integer parkingSpace = 20;
     @TableId(type = IdType.AUTO)
     private Integer vehicleId;
 
@@ -33,4 +34,5 @@ public class Vehicle {
 
     @TableField("mileage")
     private Integer mileage;
+
 }

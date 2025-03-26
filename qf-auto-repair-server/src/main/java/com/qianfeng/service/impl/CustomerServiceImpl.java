@@ -4,21 +4,31 @@ package com.qianfeng.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.qianfeng.constant.JwtClaimsConstant;
 import com.qianfeng.dto.CustomerDTO;
+import com.qianfeng.dto.CustomerLoginDTO;
 import com.qianfeng.dto.CustomerQueryDTO;
 import com.qianfeng.entity.Customer;
 import com.qianfeng.entity.RepairOrder;
 import com.qianfeng.entity.Vehicle;
+import com.qianfeng.exception.LoginFailedException;
 import com.qianfeng.mapper.CustomerMapper;
 import com.qianfeng.mapper.RepairOrderMapper;
 import com.qianfeng.mapper.VehicleMapper;
+import com.qianfeng.properties.JwtProperties;
 import com.qianfeng.service.CustomerService;
+import com.qianfeng.utils.JwtUtil;
+import com.qianfeng.vo.CustomerLoginVO;
 import com.qianfeng.vo.CustomerVO;
+import com.qianfeng.vo.EmployeeLoginVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,7 +41,40 @@ public class CustomerServiceImpl implements CustomerService {
     private VehicleMapper vehicleMapper;
     @Autowired
     private RepairOrderMapper repairOrderMapper;
+    @Autowired
+    private JwtProperties jwtProperties;
 
+    @Override
+    public CustomerLoginVO login(CustomerLoginDTO customerLoginDTO) {
+        String username = customerLoginDTO.getUsername();
+        String password = customerLoginDTO.getPassword();
+
+        LambdaQueryWrapper<Customer> customerLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        customerLambdaQueryWrapper.eq(Customer::getUsername,username);
+        Customer customer = customerMapper.selectOne(customerLambdaQueryWrapper);
+        if(!customer.getPassword().equals(password)){
+            System.out.println("密码错误");
+            throw new LoginFailedException("密码错误");
+        }
+
+        //登录成功后，生成jwt令牌
+        Map<String, Object> claims = new HashMap<>();
+        claims.put(JwtClaimsConstant.USER_ID, customer.getCustomerId());
+        String token = JwtUtil.createJWT(
+                jwtProperties.getUserSecretKey(),
+                jwtProperties.getUserTtl(),
+                claims);
+
+        CustomerLoginVO customerLoginVO = CustomerLoginVO.builder()
+                .customerId(customer.getCustomerId())
+                .userName(customer.getUsername())
+                .name(customer.getName())
+                .token(token)
+                .type("顾客")
+                .build();
+
+        return customerLoginVO;
+    }
     @Override
     public List<CustomerVO> getAllCustomers() {
         List<Customer> customers = customerMapper.selectList(null);

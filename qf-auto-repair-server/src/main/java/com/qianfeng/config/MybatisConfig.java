@@ -30,6 +30,7 @@ public class MybatisConfig implements MetaObjectHandler {
     public void insertFill(MetaObject metaObject) {
         this.strictInsertFill(metaObject, "createTime", LocalDateTime.class, LocalDateTime.now());
         this.strictInsertFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());
+        this.strictInsertFill(metaObject, "orderDate", LocalDateTime.class, LocalDateTime.now()); // 添加对 order_date 的处理
     }
 
     @Override

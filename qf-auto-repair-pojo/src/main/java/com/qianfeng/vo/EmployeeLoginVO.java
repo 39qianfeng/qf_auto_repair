@@ -31,4 +31,6 @@ public class EmployeeLoginVO {
 
     @ApiModelProperty("jwt令牌")
     private String token;
+    @ApiModelProperty("用户类型")
+    private String type;
 }

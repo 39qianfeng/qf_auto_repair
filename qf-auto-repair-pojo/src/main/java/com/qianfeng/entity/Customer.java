@@ -28,8 +28,11 @@ public class Customer {
     // 创建时间
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
-
     // 更新时间
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
+    @TableField("username")
+    private String username;
+    @TableField("password")
+    private String password;
 }
